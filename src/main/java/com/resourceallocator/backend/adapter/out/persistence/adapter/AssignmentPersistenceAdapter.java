@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,5 +59,11 @@ public class AssignmentPersistenceAdapter implements AssignmentRepository {
     @Transactional
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long countActiveEmployees(Long projectId, LocalDate today) {
+        return jpaRepository.countActiveEmployees(projectId, today);
     }
 }

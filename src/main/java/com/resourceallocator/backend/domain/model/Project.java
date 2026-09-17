@@ -22,6 +22,7 @@ public class Project {
     private LocalDate startDate;
     private LocalDate endDate;
     private BigDecimal dailyRate;
+    private Integer maxEmployees;
     private List<ProjectTechnologyRequirement> requiredTechnologies = new ArrayList<>();
 
     public void addRequirement(ProjectTechnologyRequirement requirement) {

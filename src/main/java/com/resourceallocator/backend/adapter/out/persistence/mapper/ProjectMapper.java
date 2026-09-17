@@ -19,6 +19,7 @@ public final class ProjectMapper {
         target.setStartDate(source.getStartDate());
         target.setEndDate(source.getEndDate());
         target.setDailyRate(source.getDailyRate());
+        target.setMaxEmployees(source.getMaxEmployees());
     }
 
     public static Project toDomain(ProjectJpaEntity jpa) {
@@ -41,6 +42,7 @@ public final class ProjectMapper {
         project.setStartDate(jpa.getStartDate());
         project.setEndDate(jpa.getEndDate());
         project.setDailyRate(jpa.getDailyRate());
+        project.setMaxEmployees(jpa.getMaxEmployees());
         project.setRequiredTechnologies(requirements);
         return project;
     }

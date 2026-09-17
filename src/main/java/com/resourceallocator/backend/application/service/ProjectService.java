@@ -5,6 +5,7 @@ import com.resourceallocator.backend.application.dto.ProjectTechnologyRequiremen
 import com.resourceallocator.backend.application.exception.BadRequestException;
 import com.resourceallocator.backend.application.exception.ResourceNotFoundException;
 import com.resourceallocator.backend.application.port.in.ProjectUseCase;
+import com.resourceallocator.backend.application.port.out.AssignmentRepository;
 import com.resourceallocator.backend.application.port.out.ProjectRepository;
 import com.resourceallocator.backend.application.port.out.TechnologyRepository;
 import com.resourceallocator.backend.domain.model.Project;
@@ -12,6 +13,7 @@ import com.resourceallocator.backend.domain.model.ProjectTechnologyRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class ProjectService implements ProjectUseCase {
 
     private final ProjectRepository projectRepository;
     private final TechnologyRepository technologyRepository;
+    private final AssignmentRepository assignmentRepository;
 
     @Override
     public List<ProjectDto> findAll() {
@@ -66,6 +69,7 @@ public class ProjectService implements ProjectUseCase {
         project.setStartDate(dto.startDate());
         project.setEndDate(dto.endDate());
         project.setDailyRate(dto.dailyRate());
+        project.setMaxEmployees(dto.maxEmployees());
         if (dto.requiredTechnologies() != null) {
             for (ProjectTechnologyRequirementDto req : dto.requiredTechnologies()) {
                 requireTechnology(req.technologyId());
@@ -97,6 +101,10 @@ public class ProjectService implements ProjectUseCase {
                         r.getCount()))
                 .toList();
 
+        Integer maxEmployees = project.getMaxEmployees();
+        long assignedEmployees = assignmentRepository.countActiveEmployees(project.getId(), LocalDate.now());
+        boolean seekingEmployees = maxEmployees == null || assignedEmployees < maxEmployees;
+
         return new ProjectDto(
                 project.getId(),
                 project.getName(),
@@ -106,6 +114,9 @@ public class ProjectService implements ProjectUseCase {
                 project.getStartDate(),
                 project.getEndDate(),
                 project.getDailyRate(),
+                maxEmployees,
+                (int) assignedEmployees,
+                seekingEmployees,
                 requirements);
     }
 }

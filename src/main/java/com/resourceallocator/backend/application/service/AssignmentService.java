@@ -9,9 +9,11 @@ import com.resourceallocator.backend.application.port.out.EmployeeRepository;
 import com.resourceallocator.backend.application.port.out.ProjectRepository;
 import com.resourceallocator.backend.domain.model.Assignment;
 import com.resourceallocator.backend.domain.model.AssignmentMode;
+import com.resourceallocator.backend.domain.model.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,6 +36,8 @@ public class AssignmentService implements AssignmentUseCase {
 
     @Override
     public AssignmentDto create(AssignmentDto dto) {
+        requireProject(dto.projectId());
+        validateCapacity(dto.projectId());
         Assignment assignment = toDomain(dto);
         assignment.setId(null);
         return toDto(assignmentRepository.save(assignment));
@@ -84,6 +88,20 @@ public class AssignmentService implements AssignmentUseCase {
     private void requireProject(Long projectId) {
         if (projectRepository.findById(projectId).isEmpty()) {
             throw new BadRequestException("Proyecto no encontrado con id " + projectId);
+        }
+    }
+
+    private void validateCapacity(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new BadRequestException("Proyecto no encontrado con id " + projectId));
+        if (project.getMaxEmployees() == null) {
+            return;
+        }
+        long assigned = assignmentRepository.countActiveEmployees(projectId, LocalDate.now());
+        if (assigned >= project.getMaxEmployees()) {
+            throw new BadRequestException(
+                    "El proyecto ha alcanzado su capacidad m\u00e1xima de " + project.getMaxEmployees()
+                            + " empleado(s) y no est\u00e1 buscando m\u00e1s empleados.");
         }
     }
 

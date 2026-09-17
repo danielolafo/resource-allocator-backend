@@ -17,5 +17,8 @@ public record ProjectDto(
         LocalDate startDate,
         LocalDate endDate,
         @DecimalMin("0.0") BigDecimal dailyRate,
+        @PositiveOrZero Integer maxEmployees,
+        Integer assignedEmployees,
+        Boolean seekingEmployees,
         @Valid List<ProjectTechnologyRequirementDto> requiredTechnologies
 ) {}

@@ -171,44 +171,44 @@ public class DataInitializer implements CommandLineRunner {
     private List<Long> seedProjects(Map<String, Long> tech) {
         List<Long> ids = new ArrayList<>();
         ids.add(seedProject(tech, "Portal Bancario", "Portal web transaccional para clientes de banca digital.",
-                "Banco Nacional", "ACTIVO", -200, 60, 260,
+                "Banco Nacional", "ACTIVO", -200, 60, 260, 3,
                 new String[][]{
                         {"Angular", "AVANZADO", "2", "21"},
                         {"TypeScript", "MEDIO", "1", "5.9"},
                         {"SQL Server", "MEDIO", "2", "2022"}}));
         ids.add(seedProject(tech, "App de Comercio M\u00f3vil", "Aplicaci\u00f3n m\u00f3vil y backend para tienda en l\u00ednea.",
-                "RetailMax", "ACTIVO", -90, 25, 280,
+                "RetailMax", "ACTIVO", -90, 25, 280, 2,
                 new String[][]{
                         {"React", "AVANZADO", "2", "19"},
                         {"Node.js", "AVANZADO", "2", "22"}}));
         ids.add(seedProject(tech, "ERP Corporativo", "Migraci\u00f3n y modernizaci\u00f3n de ERP interno.",
-                "Consultores Integrales", "ACTIVO", -60, 150, 320,
+                "Consultores Integrales", "ACTIVO", -60, 150, 320, 2,
                 new String[][]{
                         {".NET", "EXPERTO", "4", "9"},
                         {"SQL Server", "AVANZADO", "3", "2022"}}));
         ids.add(seedProject(tech, "Plataforma de Datos", "Construcci\u00f3n de un data warehouse anal\u00edtico.",
-                "Telecom Global", "ACTIVO", -140, 12, 300,
+                "Telecom Global", "ACTIVO", -140, 12, 300, 2,
                 new String[][]{
                         {"Python", "AVANZADO", "3", "3.13"},
                         {"PostgreSQL", "AVANZADO", "2", "17"}}));
         ids.add(seedProject(tech, "Sistema de Pagos", "Pasarela de pagos de alta disponibilidad.",
-                "Fintech Solutions", "EN_PLANIFICACION", 20, 200, 340,
+                "Fintech Solutions", "EN_PLANIFICACION", 20, 200, 340, 3,
                 new String[][]{
                         {"Java", "EXPERTO", "5", "21"},
                         {"PostgreSQL", "AVANZADO", "3", "17"},
                         {"Docker", "MEDIO", "1", "27"}}));
         ids.add(seedProject(tech, "Portal de Recursos Humanos", "Intranet para gesti\u00f3n de personal.",
-                "Grupo Andino", "ACTIVO", -30, 40, 240,
+                "Grupo Andino", "ACTIVO", -30, 40, 240, 2,
                 new String[][]{
                         {"Vue", "AVANZADO", "1", "3.5"},
                         {"Node.js", "MEDIO", "1", "22"}}));
         ids.add(seedProject(tech, "Migraci\u00f3n a la Nube", "Migraci\u00f3n de infraestructura a Azure.",
-                "Seguros Vida", "ACTIVO", -45, 18, 300,
+                "Seguros Vida", "ACTIVO", -45, 18, 300, 2,
                 new String[][]{
                         {"Azure", "AVANZADO", "3", "2024"},
                         {"Docker", "AVANZADO", "2", "27"}}));
         ids.add(seedProject(tech, "API de Log\u00edstica", "APIs de seguimiento y despacho de paquetes.",
-                "LogiExpress", "EN_PLANIFICACION", 10, 120, 260,
+                "LogiExpress", "EN_PLANIFICACION", 10, 120, 260, 2,
                 new String[][]{
                         {"Node.js", "AVANZADO", "2", "22"},
                         {"PostgreSQL", "MEDIO", "1", "17"},
@@ -218,7 +218,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private long seedProject(Map<String, Long> tech, String name, String description, String client,
                              String status, int startDaysAgo, int endDaysFromNow, int dailyRate,
-                             String[][] requirements) {
+                             int maxEmployees, String[][] requirements) {
         Project project = new Project();
         project.setName(name);
         project.setDescription(description);
@@ -227,6 +227,7 @@ public class DataInitializer implements CommandLineRunner {
         project.setStartDate(LocalDate.now().plusDays(startDaysAgo));
         project.setEndDate(LocalDate.now().plusDays(endDaysFromNow));
         project.setDailyRate(BigDecimal.valueOf(dailyRate));
+        project.setMaxEmployees(maxEmployees);
 
         for (String[] req : requirements) {
             project.addRequirement(new ProjectTechnologyRequirement(

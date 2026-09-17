@@ -43,6 +43,9 @@ public class ProjectJpaEntity {
     @Column(name = "daily_rate", precision = 10, scale = 2)
     private BigDecimal dailyRate;
 
+    @Column(name = "max_employees")
+    private Integer maxEmployees;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectTechnologyRequirementJpaEntity> requiredTechnologies = new ArrayList<>();
 
